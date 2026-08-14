@@ -1,0 +1,36 @@
+name: publish-node
+
+on:
+  push:
+    tags: ["node-v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check npm token
+        id: gate
+        run: |
+          if [ -n "$NPM_TOKEN" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "NPM_TOKEN not set — skipping publish."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.ready == 'true'
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+      - name: Build & publish
+        if: steps.gate.outputs.ready == 'true'
+        working-directory: node
+        run: |
+          npm install
+          npm run build
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

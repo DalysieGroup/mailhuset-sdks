@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mailhuset"
+version = "0.1.0"
+description = "Official Python client for the Mailhuset transactional email API."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Dalysie" }]
+keywords = ["email", "transactional", "mailhuset", "api"]
+dependencies = []
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Communications :: Email",
+]
+
+[project.urls]
+Homepage = "https://mailhuset.com"
+Repository = "https://github.com/Dalysie-ceo/mailhuset-sdks"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mailhuset"]
