@@ -20,11 +20,18 @@ Each package releases from its own git tag:
 - `go/v0.2.0` → makes the Go module resolvable via the Go proxy. No secret or CI
   needed — Go tooling reads the tag directly (the `go/` prefix is required for a
   module in a subdirectory).
-- `php-v0.2.0` → the PHP release tag. Packagist reads a package from a repository
-  root, so the PHP SDK is published via a subtree-split mirror repo
-  (`git subtree split --prefix=php`) registered on Packagist as `dalysie/mailhuset`,
-  or by registering that split repo with a Packagist auto-update webhook. One-time
-  maintainer setup, like the npm/PyPI tokens above.
+- **PHP** is published to Packagist as [`dalysie/mailhuset`](https://packagist.org/packages/dalysie/mailhuset).
+  Packagist reads a package from a repo root, so the PHP SDK lives on a read-only
+  split mirror, [`Dalysie-ceo/mailhuset-php`](https://github.com/Dalysie-ceo/mailhuset-php).
+  To cut a new PHP release from this monorepo:
+  ```bash
+  git subtree split --prefix=php -b php-split
+  git push https://github.com/Dalysie-ceo/mailhuset-php.git php-split:main
+  git push https://github.com/Dalysie-ceo/mailhuset-php.git php-split:refs/tags/vX.Y.Z
+  git branch -D php-split
+  ```
+  Then click **Update** on the Packagist package page (or set up its GitHub Hook to
+  auto-update on push).
 
 The Node/Python workflows skip cleanly when their token is unset, so the repo stays
 green until you are ready to publish.
