@@ -1,6 +1,6 @@
 {
   "name": "mailhuset",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Official Node client for the Mailhuset transactional email API.",
   "type": "module",
   "main": "./dist/index.js",

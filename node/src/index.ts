@@ -20,11 +20,18 @@ export interface MailhusetOptions {
   fetch?: typeof fetch;
 }
 
+/** A file attachment. `content` is base64-encoded. */
+export interface Attachment {
+  filename: string;
+  content: string;
+  contentType: string;
+}
+
 export interface SendParams {
   /** Sender, e.g. `Acme <you@yourdomain.com>`. The domain must be verified. */
   from: string;
   to: string | string[];
-  subject: string;
+  subject?: string;
   html?: string;
   text?: string;
   cc?: string | string[];
@@ -36,6 +43,13 @@ export interface SendParams {
   tags?: Record<string, string>;
   /** Message stream / configuration set. Defaults to `transactional`. */
   stream?: string;
+  /** Render a stored template; `subject`/`html`/`text` override the result. */
+  templateAlias?: string;
+  templateModel?: Record<string, unknown>;
+  /** File attachments (base64). Combined size is capped at ~10 MB. */
+  attachments?: Attachment[];
+  /** ISO-8601 time to send at (delayed send). Must be within 30 days. */
+  sendAt?: string;
   /** A repeat call with the same key returns the original message. */
   idempotencyKey?: string;
 }
@@ -43,6 +57,13 @@ export interface SendParams {
 export interface SendResult {
   id: string;
   status: string;
+}
+
+/** One result in a batch send: the accepted message, or a per-item error. */
+export interface BatchItemResult {
+  id?: string;
+  status: string;
+  error?: string;
 }
 
 export interface Message {
@@ -120,22 +141,36 @@ export class Mailhuset {
     return data as T;
   }
 
+  #sendBody(params: SendParams): Record<string, unknown> {
+    return {
+      from: params.from,
+      to: toArray(params.to),
+      cc: toArray(params.cc),
+      bcc: toArray(params.bcc),
+      replyTo: toArray(params.replyTo),
+      subject: params.subject,
+      html: params.html,
+      text: params.text,
+      headers: params.headers,
+      tags: params.tags,
+      stream: params.stream,
+      templateAlias: params.templateAlias,
+      templateModel: params.templateModel,
+      attachments: params.attachments,
+      sendAt: params.sendAt,
+      idempotencyKey: params.idempotencyKey,
+    };
+  }
+
   readonly emails = {
     /** Send a transactional email. Returns the queued message id. */
     send: (params: SendParams): Promise<SendResult> =>
-      this.#request<SendResult>("POST", "/email", {
-        from: params.from,
-        to: toArray(params.to),
-        cc: toArray(params.cc),
-        bcc: toArray(params.bcc),
-        replyTo: toArray(params.replyTo),
-        subject: params.subject,
-        html: params.html,
-        text: params.text,
-        headers: params.headers,
-        tags: params.tags,
-        stream: params.stream,
-        idempotencyKey: params.idempotencyKey,
+      this.#request<SendResult>("POST", "/email", this.#sendBody(params)),
+
+    /** Send up to 500 messages in one call. Returns a result per message. */
+    batch: (messages: SendParams[]): Promise<BatchItemResult[]> =>
+      this.#request<BatchItemResult[]>("POST", "/email/batch", {
+        messages: messages.map((m) => this.#sendBody(m)),
       }),
 
     /** Fetch one message and its event history. */
@@ -150,6 +185,40 @@ export class Mailhuset {
       const qs = query.toString();
       return this.#request<MessageList>("GET", `/email${qs ? `?${qs}` : ""}`);
     },
+  };
+
+  /** Suppression list — recipients that will be skipped on send. */
+  readonly suppressions = {
+    list: (): Promise<unknown> => this.#request("GET", "/suppressions"),
+    add: (address: string, reason?: string): Promise<unknown> =>
+      this.#request("POST", "/suppressions", { address, reason }),
+    remove: (address: string): Promise<unknown> =>
+      this.#request("DELETE", `/suppressions/${encodeURIComponent(address)}`),
+  };
+
+  /** Sending domains — add, inspect DNS/DKIM, verify. */
+  readonly domains = {
+    list: (): Promise<unknown> => this.#request("GET", "/domains"),
+    create: (domain: string): Promise<unknown> => this.#request("POST", "/domains", { domain }),
+    get: (domain: string): Promise<unknown> =>
+      this.#request("GET", `/domains/${encodeURIComponent(domain)}`),
+    verify: (domain: string): Promise<unknown> =>
+      this.#request("POST", `/domains/${encodeURIComponent(domain)}/verify`),
+    remove: (domain: string): Promise<unknown> =>
+      this.#request("DELETE", `/domains/${encodeURIComponent(domain)}`),
+  };
+
+  /** Stored templates. */
+  readonly templates = {
+    list: (): Promise<unknown> => this.#request("GET", "/templates"),
+    create: (body: Record<string, unknown>): Promise<unknown> =>
+      this.#request("POST", "/templates", body),
+    get: (id: string): Promise<unknown> =>
+      this.#request("GET", `/templates/${encodeURIComponent(id)}`),
+    update: (id: string, body: Record<string, unknown>): Promise<unknown> =>
+      this.#request("PUT", `/templates/${encodeURIComponent(id)}`, body),
+    remove: (id: string): Promise<unknown> =>
+      this.#request("DELETE", `/templates/${encodeURIComponent(id)}`),
   };
 }
 
