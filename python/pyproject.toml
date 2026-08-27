@@ -20,7 +20,7 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://mailhuset.com"
-Repository = "https://github.com/Dalysie-ceo/mailhuset-sdks"
+Repository = "https://github.com/DalysieGroup/mailhuset-sdks"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mailhuset"]

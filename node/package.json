@@ -19,7 +19,7 @@
   "keywords": ["email", "transactional", "mailhuset", "api", "smtp"],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Dalysie-ceo/mailhuset-sdks.git",
+    "url": "git+https://github.com/DalysieGroup/mailhuset-sdks.git",
     "directory": "node"
   },
   "homepage": "https://mailhuset.com",
