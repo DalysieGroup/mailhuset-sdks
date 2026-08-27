@@ -22,12 +22,12 @@ Each package releases from its own git tag:
   module in a subdirectory).
 - **PHP** is published to Packagist as [`dalysie/mailhuset`](https://packagist.org/packages/dalysie/mailhuset).
   Packagist reads a package from a repo root, so the PHP SDK lives on a read-only
-  split mirror, [`Dalysie-ceo/mailhuset-php`](https://github.com/Dalysie-ceo/mailhuset-php).
+  split mirror, [`DalysieGroup/mailhuset-php`](https://github.com/DalysieGroup/mailhuset-php).
   To cut a new PHP release from this monorepo:
   ```bash
   git subtree split --prefix=php -b php-split
-  git push https://github.com/Dalysie-ceo/mailhuset-php.git php-split:main
-  git push https://github.com/Dalysie-ceo/mailhuset-php.git php-split:refs/tags/vX.Y.Z
+  git push https://github.com/DalysieGroup/mailhuset-php.git php-split:main
+  git push https://github.com/DalysieGroup/mailhuset-php.git php-split:refs/tags/vX.Y.Z
   git branch -D php-split
   ```
   Then click **Update** on the Packagist package page (or set up its GitHub Hook to
