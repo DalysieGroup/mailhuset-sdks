@@ -10,7 +10,7 @@ jobs:
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Check npm token
         id: gate
         run: |
@@ -20,7 +20,7 @@ jobs:
             echo "NPM_TOKEN not set — skipping publish."
             echo "ready=false" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         if: steps.gate.outputs.ready == 'true'
         with:
           node-version: 20
