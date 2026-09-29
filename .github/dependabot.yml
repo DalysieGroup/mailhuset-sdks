@@ -13,3 +13,8 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
+    open-pull-requests-limit: 5
+    groups:
+      # One PR a week for the routine churn; majors still come singly.
+      minor-and-patch:
+        update-types: ["minor", "patch"]
