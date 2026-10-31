@@ -5,11 +5,11 @@ Official Go client for the [Mailhuset](https://mailhuset.com) transactional emai
 ## Install
 
 ```bash
-go get github.com/Dalysie-ceo/mailhuset-sdks/go@latest
+go get github.com/DalysieGroup/mailhuset-sdks/go@latest
 ```
 
 ```go
-import mailhuset "github.com/Dalysie-ceo/mailhuset-sdks/go"
+import mailhuset "github.com/DalysieGroup/mailhuset-sdks/go"
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ import (
 	"context"
 	"log"
 
-	mailhuset "github.com/Dalysie-ceo/mailhuset-sdks/go"
+	mailhuset "github.com/DalysieGroup/mailhuset-sdks/go"
 )
 
 func main() {

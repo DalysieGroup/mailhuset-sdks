@@ -9,7 +9,7 @@ email API. All four cover the same surface: `emails` (send / batch / get / list)
 | Node | [`node/`](node) | `npm install mailhuset` |
 | Python | [`python/`](python) | `pip install mailhuset` |
 | PHP | [`php/`](php) | `composer require dalysie/mailhuset` |
-| Go | [`go/`](go) | `go get github.com/Dalysie-ceo/mailhuset-sdks/go@latest` |
+| Go | [`go/`](go) | `go get github.com/DalysieGroup/mailhuset-sdks/go@latest` |
 
 ## Publishing
 

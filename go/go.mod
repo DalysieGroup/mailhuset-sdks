@@ -1,3 +1,3 @@
-module github.com/Dalysie-ceo/mailhuset-sdks/go
+module github.com/DalysieGroup/mailhuset-sdks/go
 
 go 1.21
