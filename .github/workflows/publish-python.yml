@@ -10,7 +10,7 @@ jobs:
     env:
       PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Check PyPI token
         id: gate
         run: |
