@@ -20,7 +20,7 @@ import urllib.error
 import urllib.request
 from typing import Any, Dict, List, Optional, Sequence, Union
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 __all__ = ["Mailhuset", "MailhusetError"]
 
 DEFAULT_BASE_URL = "https://api.mailhuset.com/v1"
@@ -63,6 +63,7 @@ def _send_body(
     attachments: Optional[List[Dict[str, str]]] = None,
     send_at: Optional[str] = None,
     idempotency_key: Optional[str] = None,
+    tracking: Optional[Dict[str, bool]] = None,
 ) -> Dict[str, Any]:
     """Build the JSON body for a send, dropping unset (None) fields."""
     body = {
@@ -82,6 +83,7 @@ def _send_body(
         "attachments": attachments,
         "sendAt": send_at,
         "idempotencyKey": idempotency_key,
+        "tracking": tracking,
     }
     return {k: v for k, v in body.items() if v is not None}
 
@@ -109,18 +111,22 @@ class _Emails:
         attachments: Optional[List[Dict[str, str]]] = None,
         send_at: Optional[str] = None,
         idempotency_key: Optional[str] = None,
+        tracking: Optional[Dict[str, bool]] = None,
     ) -> Dict[str, Any]:
         """Send a transactional email. Returns ``{"id": ..., "status": ...}``.
 
         ``sender`` is the from address; its domain must be verified. ``attachments``
         are dicts of ``{"filename", "content" (base64), "contentType"}``. ``send_at``
-        is an ISO-8601 time for delayed send (within 30 days).
+        is an ISO-8601 time for delayed send (within 30 days). ``tracking`` is
+        ``{"opens": bool, "clicks": bool}``; unset fields follow the stream
+        (broadcasts are tracked by default, transactional mail is not).
         """
         return self._client._request("POST", "/email", _send_body(
             sender=sender, to=to, subject=subject, html=html, text=text, cc=cc, bcc=bcc,
             reply_to=reply_to, headers=headers, tags=tags, stream=stream,
             template_alias=template_alias, template_model=template_model,
             attachments=attachments, send_at=send_at, idempotency_key=idempotency_key,
+            tracking=tracking,
         ))
 
     def batch(self, messages: Sequence[Dict[str, Any]]) -> Any:

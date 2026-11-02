@@ -30,6 +30,11 @@ const message = await mh.emails.get(id);
 const { items } = await mh.emails.list({ limit: 20 });
 ```
 
+Turn on open and click tracking for one message with
+`tracking: { opens: true, clicks: true }`. Broadcasts track opens and clicks by default; transactional mail is not tracked
+unless you ask. Opens are a rough guide (Apple Mail preloads images), and click
+tracking rewrites links, so leave it off for password resets and one-time links.
+
 Any non-2xx response throws a `MailhusetError` with `.status` and `.code`.
 
 Requires Node 18 or newer (for the global `fetch`). Point it at another host with

@@ -43,6 +43,12 @@ func main() {
 }
 ```
 
+Turn on open and click tracking for one message with
+`Tracking: &mailhuset.Tracking{Opens: mailhuset.Bool(true), Clicks: mailhuset.Bool(true)}`.
+Broadcasts track opens and clicks by default; transactional mail is not tracked
+unless you ask. Opens are a rough guide (Apple Mail preloads images), and click
+tracking rewrites links, so leave it off for password resets and one-time links.
+
 ## Resources
 
 - `mh.Emails.Send`, `.Batch`, `.Get`, `.List`

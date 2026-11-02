@@ -27,6 +27,17 @@ export interface Attachment {
   contentType: string;
 }
 
+/**
+ * Open and click tracking for one message. Unset fields follow the stream:
+ * broadcasts are tracked by default, transactional mail is not.
+ */
+export interface Tracking {
+  /** Add an open pixel. A rough guide only: Apple Mail preloads images. */
+  opens?: boolean;
+  /** Send links through a tracking redirect. Leave off for one-time links. */
+  clicks?: boolean;
+}
+
 export interface SendParams {
   /** Sender, e.g. `Acme <you@yourdomain.com>`. The domain must be verified. */
   from: string;
@@ -52,6 +63,8 @@ export interface SendParams {
   sendAt?: string;
   /** A repeat call with the same key returns the original message. */
   idempotencyKey?: string;
+  /** Open and click tracking, e.g. `{ opens: true, clicks: true }`. */
+  tracking?: Tracking;
 }
 
 export interface SendResult {
@@ -159,6 +172,7 @@ export class Mailhuset {
       attachments: params.attachments,
       sendAt: params.sendAt,
       idempotencyKey: params.idempotencyKey,
+      tracking: params.tracking,
     };
   }
 

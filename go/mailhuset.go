@@ -140,6 +140,17 @@ type Attachment struct {
 	ContentType string `json:"contentType"`
 }
 
+// Tracking turns open and click tracking on or off for one message. A nil
+// field follows the stream: broadcasts are tracked by default, transactional
+// mail is not. Use Bool to take the address of a literal.
+type Tracking struct {
+	Opens  *bool `json:"opens,omitempty"`
+	Clicks *bool `json:"clicks,omitempty"`
+}
+
+// Bool returns a pointer to b, for Tracking fields.
+func Bool(b bool) *bool { return &b }
+
 // SendParams are the fields of an outbound email. From and To are required.
 type SendParams struct {
 	From           string            `json:"from"`
@@ -158,6 +169,7 @@ type SendParams struct {
 	Attachments    []Attachment      `json:"attachments,omitempty"`
 	SendAt         string            `json:"sendAt,omitempty"`
 	IdempotencyKey string            `json:"idempotencyKey,omitempty"`
+	Tracking       *Tracking         `json:"tracking,omitempty"`
 }
 
 // SendResult is the outcome of a single send.

@@ -16,7 +16,9 @@ final class Emails
      *
      * @param  array<string,mixed>  $params  from (required), to (required, string|list),
      *   subject, html, text, cc, bcc, replyTo, headers, tags, stream, templateAlias,
-     *   templateModel, attachments, sendAt, idempotencyKey
+     *   templateModel, attachments, sendAt, idempotencyKey, tracking
+     *   (['opens' => bool, 'clicks' => bool]; unset fields follow the stream:
+     *   broadcasts are tracked by default, transactional mail is not)
      * @return array<mixed>
      */
     public function send(array $params): array
@@ -86,6 +88,7 @@ final class Emails
             'attachments' => $p['attachments'] ?? null,
             'sendAt' => $p['sendAt'] ?? null,
             'idempotencyKey' => $p['idempotencyKey'] ?? null,
+            'tracking' => $p['tracking'] ?? null,
         ];
 
         // Drop nulls so optional fields are omitted (keep falsy values like "").

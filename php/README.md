@@ -29,7 +29,12 @@ echo $result['id'], ' ', $result['status'], PHP_EOL;
 
 `to`, `cc`, `bcc`, and `replyTo` accept a single address or a list. Optional
 fields (`text`, `headers`, `tags`, `stream`, `templateAlias`, `templateModel`,
-`attachments`, `sendAt`, `idempotencyKey`) may be omitted.
+`attachments`, `sendAt`, `idempotencyKey`, `tracking`) may be omitted.
+
+Turn on open and click tracking for one message with
+`'tracking' => ['opens' => true, 'clicks' => true]`. Broadcasts track opens and clicks by default; transactional mail is not tracked
+unless you ask. Opens are a rough guide (Apple Mail preloads images), and click
+tracking rewrites links, so leave it off for password resets and one-time links.
 
 ## Resources
 

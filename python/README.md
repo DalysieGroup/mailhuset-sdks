@@ -27,5 +27,10 @@ mh.emails.send(
 `send` returns `{"id": ..., "status": ...}`. You can also `mh.emails.get(id)` and
 `mh.emails.list(limit=20)`.
 
+Turn on open and click tracking for one message with
+`tracking={"opens": True, "clicks": True}`. Broadcasts track opens and clicks by default; transactional mail is not tracked
+unless you ask. Opens are a rough guide (Apple Mail preloads images), and click
+tracking rewrites links, so leave it off for password resets and one-time links.
+
 A non-2xx response raises `MailhusetError` with `.status` and `.code`. Point it at
 another host with `Mailhuset(key, base_url="https://api.mailhuset.com/v1")`.
