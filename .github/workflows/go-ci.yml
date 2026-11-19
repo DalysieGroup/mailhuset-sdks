@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(vars.DMH_RUNNER || '"ubuntu-latest"') }}
     defaults:
       run:
         working-directory: go
