@@ -20,7 +20,7 @@ jobs:
             echo "NPM_TOKEN not set — skipping publish."
             echo "ready=false" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         if: steps.gate.outputs.ready == 'true'
         with:
           node-version: 20
